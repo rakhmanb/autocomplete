@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  constructor(dataService: DataServices) {
+  constructor(dataService: IDataService) {
     this._dataService = dataService;
   }
 

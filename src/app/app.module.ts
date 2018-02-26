@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { Dropdown } from "./dropdown.component";
 
 import { DataServices } from "./Services/data.service";
+import { IDataService } from "./Services/IDataService";
+import { MockDataService } from "./Services/mockData.service";
 
 
 @NgModule({
@@ -19,7 +21,7 @@ import { DataServices } from "./Services/data.service";
     HttpModule
   ],
   providers: [
-    DataServices
+    {provide: IDataService, useClass: DataServices}
   ],
   bootstrap: [AppComponent]
 })

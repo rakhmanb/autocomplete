@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Rx';
 
-export interface IDataService {
-    getJson() : Observable<any>;
+export abstract class IDataService {
+    abstract getJson() : Observable<any>;
 }
