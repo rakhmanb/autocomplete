@@ -14,7 +14,8 @@ export class MockDataService implements IDataService {
     public getJson() : Observable<IDropdownItem[]> {
 
         return Observable.of([{value:1,label:"test"},
-                              {value:2,label:"test2"} ]);
+                                {value:2,label:"test2"},
+                                {value:3, label:"bima1"} ]);
     }
 
 }
