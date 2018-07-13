@@ -11,7 +11,13 @@ export class Dropdown {
 
     public selectedValue: string = "";
 
+    public selectedIndex: number = -1;
+
     @Input() public onItemSelect: (item: IDropdownItem) => void;
+
+    @Input() public onFilter: (text: string) => void;
+
+    @Input() public service: any;
 
     @Input()
     public set DropDownItems(items: IDropdownItem[]) {
@@ -26,11 +32,19 @@ export class Dropdown {
         return this._filteredDropDownItems;
     }
 
+    public set filteredDropDownItems(items: IDropdownItem[]) {
+        this._filteredDropDownItems = items;
+    }
+
     public get isEmpty():boolean {
         if(this._filteredDropDownItems) {
             return this._filteredDropDownItems.length === 0;
         }
         return true;
+    }
+
+    public selected(item: IDropdownItem):boolean {
+        return this.selectedIndex === item.index
     }
 
     @Output() public selectedItem = new EventEmitter();
@@ -52,7 +66,12 @@ export class Dropdown {
 
         if(event.keyCode === 13) {
             if(this._filteredDropDownItems.length > 0) {
-                this.onSelect(this._filteredDropDownItems[0]);
+                if(this.selectedIndex > -1){
+                    this.onSelect(this._filteredDropDownItems[this.selectedIndex]);
+                }
+                else {
+                    this.onSelect(this._filteredDropDownItems[0]);
+                }
                 return;
             }
             else {
@@ -66,6 +85,16 @@ export class Dropdown {
             }
 
             this._filteredDropDownItems = [];
+        } 
+        else if(event.keyCode === 40 && !this.isEmpty) {
+            if(this._filteredDropDownItems.length-1 !== this.selectedIndex ){
+                this.selectedIndex += 1;
+            }
+        } 
+        else if(event.keyCode === 38 && !this.isEmpty) {
+            if(this.selectedIndex !== -1){
+                this.selectedIndex -= 1;
+            }
         }
     }
 
@@ -80,10 +109,17 @@ export class Dropdown {
 
     private filter(text:string): void {
         this._filteredDropDownItems = [];
+        this.selectedIndex = -1;
 
-        for(let i = 0; i < this._dropDownItems.length; i++){
-            if(this._dropDownItems[i].label.toLowerCase().indexOf(text) > -1) {
-                this._filteredDropDownItems.push(this._dropDownItems[i]);
+        if(this.onFilter){
+            this.onFilter(text);
+        }
+        else {
+            for(let i = 0; i < this._dropDownItems.length; i++){
+                if(this._dropDownItems[i].label.toLowerCase().indexOf(text) > -1) {
+                    this._dropDownItems[i].index = i;
+                    this._filteredDropDownItems.push(this._dropDownItems[i]);
+                }
             }
         }
     }

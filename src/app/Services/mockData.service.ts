@@ -7,6 +7,9 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class MockDataService implements IDataService {
+    filter(): Observable<any> {
+        throw new Error("Method not implemented.");
+    }
 
     constructor(private http: Http) {
     }

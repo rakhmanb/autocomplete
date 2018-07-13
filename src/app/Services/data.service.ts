@@ -16,4 +16,26 @@ export class DataServices implements IDataService {
                         .map((res:any) => res.json());
     }
 
+    public filter(text: string) : Observable<IDropdownItem[]> {
+        return this.http.get("./assets/MOCK_DATA_1000.json")
+        .map((res:any) => { 
+            let items = res.json();
+
+            let index = 0;
+
+            let retItems = [];
+            
+            for(let i = 0; i < items.length; i++) {
+                if(items[i].label.toLowerCase().indexOf(text.toLowerCase()) > -1) {
+                    items[i].index = index;
+                    retItems.push(items[i]);
+                    index++;
+                }
+            }
+
+            return retItems;
+        
+        });
+    }
+
 }

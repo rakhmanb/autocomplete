@@ -2,34 +2,34 @@ import { Component, OnInit } from '@angular/core';
 import { IDropdownItem } from "./Model/IDropdownItem";
 import { DataServices } from "./Services/data.service";
 import { IDataService } from "./Services/IDataService";
+import { Dropdown } from "./dropdown.component";
 
 @Component({
   selector: 'app-root',
   template: `
-   <dropdown [DropDownItems]="items" [onItemSelect]="onSelect" (selectedItem)="onSelectedItem($event)"></dropdown>
+   <dropdown [onItemSelect]="onSelect" [service]="_dataService" [onFilter]="onFilter" (selectedItem)="onSelectedItem($event)"></dropdown>
    <div>{{selectedItemText}}</div>
   `,
   styles: []
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
   selectedItemText: string;
 
   private _dataService: IDataService;
-
-  items: IDropdownItem[];
-
-  ngOnInit(): void {
-    this._dataService.getJson().subscribe((items:IDropdownItem[]) => {
-      this.items = items;
-    });
-  }
 
   constructor(dataService: IDataService) {
     this._dataService = dataService;
   }
 
   onSelect(item: IDropdownItem) : void {
+  }
+
+  onFilter(text: string) : void {
+    (<any>this).service.filter(text).subscribe((items:IDropdownItem[]) => {
+      (<any>this).filteredDropDownItems = items;
+    });
+
   }
 
   onSelectedItem($event: any): void {
